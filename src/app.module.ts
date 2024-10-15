@@ -3,6 +3,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './note/note.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import "dotenv/config"
 
 @Module({
   imports: [

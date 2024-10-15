@@ -18,8 +18,4 @@ export class AuthController {
 
 
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
 }

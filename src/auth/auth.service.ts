@@ -1,38 +1,34 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Login } from './dto/login.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from '../user/entities/user.interface';
 import { UserService } from 'src/user/user.service';
+import * as bcrypt from 'bcrypt'
+import { JwtService } from '@nestjs/jwt';
 
 
 @Injectable()
 export class AuthService {
   constructor(
-     private userService: UserService
+     private userService: UserService,
+     private jwtService: JwtService,
     ){}
-  async validateUser(LoginDto: Login) {
-    //find user
-    
-    // compare 
+  async validateUser(LoginDto: Login): Promise<any>{
+    try {
+      const user = await this.userService.findOne(LoginDto.username)
+      
+      const isValidPass = await bcrypt.compare(LoginDto.password, user.password)
+      if(!isValidPass) throw new UnauthorizedException("invalid cardential")
+      
+      const payload = {
+        username: user.username,
+        id: user._id
+      }
 
-
-    // token or error
-
-    return 'This action adds a new auth';
-  }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
- 
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+      return {
+        access_token: this.jwtService.sign(payload)
+      }
+      
+    } catch (error) {
+      throw new UnauthorizedException("invalid cardential")
+    }
   }
 }

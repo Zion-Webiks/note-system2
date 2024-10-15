@@ -1,10 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Login } from './dto/login.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from '../user/entities/user.interface';
+
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
+  constructor(@InjectModel('User') private userModel: Model<User>){}
+  async validateUser(LoginDto: Login) {
+    //find user
+    const result = await this.userModel.findOne({username:LoginDto.username})
+    if(!result) throw new NotFoundException('User not found')
+    // compare 
+    const 
+
+    // token or error
+
     return 'This action adds a new auth';
   }
 

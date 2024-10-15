@@ -7,27 +7,16 @@ import { Login } from './dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(
+  @Post('login')
+  async login(
     @Body() 
     LoginDto: Login) {
-    return this.authService.create(Login);
+    return this.authService.validateUser(LoginDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {
